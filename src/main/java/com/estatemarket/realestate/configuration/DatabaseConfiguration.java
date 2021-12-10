@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -16,17 +17,16 @@ public class DatabaseConfiguration {
     private Environment environment;
 
     @Bean
-    public StringRedisTemplate redisTemplate(){
-        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
-        StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
-        stringRedisTemplate.setConnectionFactory(jedisConnectionFactory);
-        return stringRedisTemplate;
+    public StringRedisTemplate redisTemplate(RedisConnectionFactory connectionFactory) {
+        StringRedisTemplate template = new StringRedisTemplate();
+        template.setConnectionFactory(connectionFactory);
+        return template;
     }
 
     @Bean
-    public DriverManagerDataSource dataSource(){
-        String mysqlUsername = redisTemplate().opsForValue().get(environment.getProperty("spring.datasource.username"));
-        String mysqlPassword = redisTemplate().opsForValue().get(environment.getProperty("spring.datasource.password"));
+    public DriverManagerDataSource dataSource(StringRedisTemplate stringRedisTemplate){
+        String mysqlUsername = stringRedisTemplate.opsForValue().get(environment.getProperty("spring.datasource.username"));
+        String mysqlPassword = stringRedisTemplate.opsForValue().get(environment.getProperty("spring.datasource.password"));
 
         DriverManagerDataSource mysqlInstance = new DriverManagerDataSource();
         mysqlInstance.setDriverClassName(environment.getProperty("spring.datasource.driverClassName"));
