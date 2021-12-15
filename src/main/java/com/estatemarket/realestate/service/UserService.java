@@ -1,7 +1,7 @@
 package com.estatemarket.realestate.service;
 
-import com.estatemarket.realestate.repo.UserRepo;
 import com.estatemarket.realestate.repo.model.User;
+import com.estatemarket.realestate.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class UserService {
+public final class UserService {
 
     private final UserRepo userRepo;
 

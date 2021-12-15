@@ -1,5 +1,6 @@
 package com.estatemarket.realestate.repo.model;
 
+import com.estatemarket.realestate.exceptions.api.enums.BanEnum;
 import javax.persistence.*;
 
 @Entity
@@ -8,13 +9,32 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private long id;
+
+    @Basic
+    @Column(name = "name")
     private String name;
+
+    @Basic
+    @Column(name = "surname")
     private String surname;
+
+    @Basic
+    @Column(name = "email")
     private String email;
+
+    @Basic
+    @Column(name = "password")
     private String password;
+
+    @Basic
+    @Column(name = "phone")
     private String phone;
-    private String ban;
+
+    @Basic
+    @Column(name = "ban")
+    private BanEnum ban;
 
     public User() {
     }
@@ -25,11 +45,15 @@ public class User {
         this.email = email;
         this.password = password;
         this.phone = phone;
-        this.ban = "no";
+        this.ban = BanEnum.NO;
     }
 
     public long getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setId(long id) {
@@ -76,11 +100,11 @@ public class User {
         this.phone = phone;
     }
 
-    public String getBan() {
+    public BanEnum getBan() {
         return ban;
     }
 
-    public void setBan(String ban) {
+    public void setBan(BanEnum ban) {
         this.ban = ban;
     }
 }

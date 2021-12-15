@@ -1,5 +1,6 @@
-package com.estatemarket.realestate.api;
+package com.estatemarket.realestate.exceptions.api;
 
+import com.estatemarket.realestate.exceptions.api.dto.UserDto;
 import com.estatemarket.realestate.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -33,19 +34,20 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody com.estatemarket.realestate.api.dto.User user) {
+    public ResponseEntity<Void> create(@RequestBody UserDto user) {
         final String name = user.getName();
         final String surname = user.getSurname();
         final String email = user.getEmail();
         final String password = user.getPassword();
         final String phone = user.getPhone();
+        final String role = user.getRole();
         final long id = userService.create(name, surname, email, password, phone);
         final String location = String.format("/users/%d", id);
         return ResponseEntity.created(URI.create(location)).build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable long id, @RequestBody com.estatemarket.realestate.api.dto.User user) {
+    public ResponseEntity<Void> update(@PathVariable long id, @RequestBody UserDto user) {
         final String name = user.getName();
         final String surname = user.getSurname();
         final String email = user.getEmail();
