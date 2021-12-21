@@ -1,6 +1,6 @@
 package com.estatemarket.realestate.repo.model;
 
-import com.estatemarket.realestate.exceptions.api.enums.BanEnum;
+import com.estatemarket.realestate.api.enums.BanEnum;
 import javax.persistence.*;
 
 @Entity
@@ -12,40 +12,40 @@ public class User {
     @Column(name = "id")
     private long id;
 
-    @Basic
     @Column(name = "name")
     private String name;
 
-    @Basic
     @Column(name = "surname")
     private String surname;
 
-    @Basic
     @Column(name = "email")
     private String email;
 
-    @Basic
     @Column(name = "password")
     private String password;
 
-    @Basic
     @Column(name = "phone")
     private String phone;
 
-    @Basic
+    @Enumerated(EnumType.STRING)
     @Column(name = "ban")
     private BanEnum ban;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Role role;
+
 
     public User() {
     }
 
-    public User(String name, String surname, String email, String password, String phone) {
+    public User(String name, String surname, String email, String password, String phone, Role role) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.password = password;
         this.phone = phone;
         this.ban = BanEnum.NO;
+        this.role = role;
     }
 
     public long getId() {
@@ -53,10 +53,6 @@ public class User {
     }
 
     public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setId(long id) {
         this.id = id;
     }
 
@@ -106,6 +102,14 @@ public class User {
 
     public void setBan(BanEnum ban) {
         this.ban = ban;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
 

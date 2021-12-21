@@ -1,37 +1,31 @@
 package com.estatemarket.realestate.repo.model;
 
-import com.estatemarket.realestate.exceptions.api.enums.OfferEnum;
 import javax.persistence.*;
-import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @Entity
-@Table(name = "offer")
-public class Offer implements Serializable {
+public class Offer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @Column(name = "id")
+    private int id;
+
     @Column(name = "estate_id")
     private int estateId;
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
+
     @Column(name = "realtor_id")
     private int realtorId;
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "time")
-    private Timestamp time;
-    @Basic
-    @Column(name = "status")
-    private OfferEnum status;
 
-    public Offer() {
+    @Column(name = "date")
+    private Timestamp datetime;
+
+    public int getId() {
+        return id;
     }
 
-    public Offer(int estateId, int realtorId, Timestamp time) {
-        this.estateId = estateId;
-        this.realtorId = realtorId;
-        this.time = time;
-        this.status = OfferEnum.SENT;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getEstateId() {
@@ -50,19 +44,24 @@ public class Offer implements Serializable {
         this.realtorId = realtorId;
     }
 
-    public Timestamp getTime() {
-        return time;
+    public Timestamp getDatetime() {
+        return datetime;
     }
 
-    public void setTime(Timestamp time) {
-        this.time = time;
+    public void setDatetime(Timestamp datetime) {
+        this.datetime = datetime;
     }
 
-    public OfferEnum getStatus() {
-        return status;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Offer offer = (Offer) o;
+        return id == offer.id && estateId == offer.estateId && realtorId == offer.realtorId && Objects.equals(datetime, offer.datetime);
     }
 
-    public void setStatus(OfferEnum status) {
-        this.status = status;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, estateId, realtorId, datetime);
     }
 }

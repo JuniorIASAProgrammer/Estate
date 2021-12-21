@@ -1,6 +1,6 @@
 package com.estatemarket.realestate.repo.model;
 
-import com.estatemarket.realestate.exceptions.api.enums.EstateDealEnum;
+import com.estatemarket.realestate.api.enums.EstateDealEnum;
 import javax.persistence.*;
 
 @Entity
@@ -11,19 +11,28 @@ public class Estate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
+
+    @Enumerated(EnumType.STRING)
+
     @Column(name = "dealtype")
     private EstateDealEnum dealType;
-    @Basic
-    @Column(name = "owner")
-    private long owner;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User owner;
+
+    @Column(name = "city")
     private String city;
+
+    @Column(name = "district")
     private String district;
+
+    @Column(name = "adress")
     private String adress;
 
     public Estate() {
     }
 
-    public Estate(EstateDealEnum dealType, Description description, long owner) {
+    public Estate(EstateDealEnum dealType, Description description, User owner) {
         this.dealType = dealType;
         this.owner = owner;
         this.city = description.getCity();
@@ -43,12 +52,8 @@ public class Estate {
         this.dealType = dealType;
     }
 
-    public long getOwner() {
+    public User getOwner() {
         return owner;
-    }
-
-    public void setOwner(int owner) {
-        this.owner = owner;
     }
 
     public String getCity() {

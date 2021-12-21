@@ -1,6 +1,7 @@
-package com.estatemarket.realestate.exceptions.api;
+package com.estatemarket.realestate.api;
 
-import com.estatemarket.realestate.exceptions.api.dto.EstateDto;
+import com.estatemarket.realestate.api.dto.EstateDto;
+import com.estatemarket.realestate.api.enums.EstateDealEnum;
 import com.estatemarket.realestate.repo.model.Description;
 import com.estatemarket.realestate.repo.model.Estate;
 import com.estatemarket.realestate.service.EstateService;
@@ -14,21 +15,21 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/estate")
+@RequestMapping("EstateMarketplace/estate")
 public class EstateController {
 
     private final EstateService estateService;
 
-    @GetMapping
-    public ResponseEntity<List<com.estatemarket.realestate.repo.model.Estate>> index() {
-        final List<com.estatemarket.realestate.repo.model.Estate> estate = estateService.fetchAll();
-        return ResponseEntity.ok(estate);
+    @GetMapping("/getAll")
+    public ResponseEntity<List<Estate>> getAll() {
+        final List<Estate> estateList = estateService.fetchAll();
+        return ResponseEntity.ok(estateList);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<com.estatemarket.realestate.repo.model.Estate> show(@PathVariable long id){
+    @GetMapping("/getById/id={id}")
+    public ResponseEntity<Estate> getById(@PathVariable long id){
         try {
-            final Estate estate = estateService.fetchById(id);
+            Estate estate = estateService.fetchById(id);
             return ResponseEntity.ok(estate);
         }
         catch (IllegalArgumentException e){
@@ -36,22 +37,17 @@ public class EstateController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Void> create(@RequestBody EstateDto estate){
-        final String dealType = estate.getDealType();
-        final Description description = estate.getDescription();
-        final long owner = estate.getOwner();
-        final long id = estateService.create(dealType, description, owner);
-        final String location = String.format("/estate/%d", id);
+        long id = estateService.create(estate);
+        String location = String.format("/estate/%d", id);
         return ResponseEntity.created(URI.create(location)).build();
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/update/id={id}")
     public ResponseEntity<Void> update(@PathVariable long id, @RequestBody EstateDto estate){
-        final String dealType = estate.getDealType();
-        final Description description = estate.getDescription();
         try{
-            estateService.update(id, dealType, description);
+            estateService.update(id, estate);
             return ResponseEntity.noContent().build();
         }
         catch (IllegalArgumentException e){
@@ -59,7 +55,7 @@ public class EstateController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/id={id}")
     public ResponseEntity<Void> delete(@PathVariable long id){
         estateService.delete(id);
         return ResponseEntity.noContent().build();

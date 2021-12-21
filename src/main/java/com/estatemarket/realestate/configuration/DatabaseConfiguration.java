@@ -1,5 +1,6 @@
 package com.estatemarket.realestate.configuration;
 
+import io.lettuce.core.RedisConnectionException;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +12,6 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.annotation.Resource;
 
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 
@@ -20,7 +20,7 @@ public class DatabaseConfiguration {
 
     Logger log = LoggerFactory.getLogger(DatabaseConfiguration.class);
 
-     @Resource
+    @Resource
     private Environment environment;
 
     @Bean
@@ -34,7 +34,6 @@ public class DatabaseConfiguration {
     public DriverManagerDataSource dataSource(StringRedisTemplate stringRedisTemplate){
         String mysqlUsername = stringRedisTemplate.opsForValue().get(environment.getProperty("spring.datasource.username"));
         String mysqlPassword = stringRedisTemplate.opsForValue().get(environment.getProperty("spring.datasource.password"));
-
         DriverManagerDataSource mysqlInstance = new DriverManagerDataSource();
         mysqlInstance.setDriverClassName(environment.getProperty("spring.datasource.driverClassName"));
         mysqlInstance.setUrl(environment.getProperty("spring.datasource.url"));
@@ -42,4 +41,5 @@ public class DatabaseConfiguration {
         mysqlInstance.setPassword(mysqlPassword);
         return mysqlInstance;
     }
+
 }

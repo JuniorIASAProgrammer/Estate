@@ -1,9 +1,12 @@
 package com.estatemarket.realestate.service;
 
-import com.estatemarket.realestate.exceptions.api.enums.EstateDealEnum;
+import com.estatemarket.realestate.api.dto.EstateDto;
+import com.estatemarket.realestate.api.enums.EstateDealEnum;
 import com.estatemarket.realestate.repo.EstateRepo;
+import com.estatemarket.realestate.repo.UserRepo;
 import com.estatemarket.realestate.repo.model.Description;
 import com.estatemarket.realestate.repo.model.Estate;
+import com.estatemarket.realestate.repo.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +18,7 @@ import java.util.Optional;
 public final class EstateService {
 
     private final EstateRepo estateRepo;
+    private final UserRepo userRepo;
 
     public List<Estate> fetchAll(){
         return estateRepo.findAll();
@@ -22,24 +26,27 @@ public final class EstateService {
 
     public Estate fetchById(long id) throws IllegalArgumentException{
         final Optional<Estate> maybeEstate = estateRepo.findById(id);
-        if (maybeEstate.isEmpty()) throw new IllegalArgumentException("Announcment not found");
+        if (maybeEstate.isEmpty()) throw new IllegalArgumentException("Estate not found");
         else return maybeEstate.get();
     }
 
-    public long create(String dealType, Description description, long owner){
-        EstateDealEnum estateDealEnum = EstateDealEnum.valueOf(dealType);
-        final Estate estate = new Estate(estateDealEnum, description, owner);
-        final Estate savedEstate = estateRepo.save(estate);
+    public long create(EstateDto estate){
+        EstateDealEnum dealType = estate.getDealType();
+        Description description = estate.getDescription();
+        long ownerId = estate.getOwner();
+        User owner = userRepo.findOwnerById(ownerId);
+        Estate newEstate = new Estate(dealType, description, owner);
+        final Estate savedEstate = estateRepo.save(newEstate);
         return savedEstate.getId();
     }
 
-    public void update(long id, String dealType, Description description){
+    public void update(long id, EstateDto estateDto){
+        EstateDealEnum dealType = estateDto.getDealType();
+        Description description = estateDto.getDescription();
         final Optional<Estate> maybeEstate = estateRepo.findById(id);
-        if (maybeEstate.isEmpty()) throw new IllegalArgumentException("User not found");
-
-        final Estate estate = maybeEstate.get();
-        EstateDealEnum estateDealEnum = EstateDealEnum.valueOf(dealType);
-        if (dealType != null && !dealType.isBlank()) estate.setDealType(estateDealEnum);
+        if (maybeEstate.isEmpty()) throw new IllegalArgumentException("Estate not found");
+        Estate estate = maybeEstate.get();
+        if (!dealType.toString().isEmpty() && dealType!=estate.getDealtype()) estate.setDescription(description);
         if (!description.isEmpty()) estate.setDescription(description);
         estateRepo.save(estate);
     }

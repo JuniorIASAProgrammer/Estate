@@ -1,4 +1,4 @@
-package com.estatemarket.realestate.exceptions.api.dto;
+package com.estatemarket.realestate.api.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +10,7 @@ public final class UserDto {
     private String surname;
     private String email;
     private String password;
+    private String repeatPassword;
     private String phone;
     private String role;
 }

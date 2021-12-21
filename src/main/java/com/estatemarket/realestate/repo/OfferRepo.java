@@ -1,10 +1,9 @@
 package com.estatemarket.realestate.repo;
 
-import com.estatemarket.realestate.repo.model.Estate;
+import com.estatemarket.realestate.repo.model.Offer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface EstateRepo extends JpaRepository<Estate, Long> {
-    Estate findEstateById(long estateId);
+public interface OfferRepo extends JpaRepository<Offer, Long> {
 }
