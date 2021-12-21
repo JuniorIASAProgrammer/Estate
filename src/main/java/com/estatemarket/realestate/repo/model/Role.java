@@ -1,7 +1,6 @@
 package com.estatemarket.realestate.repo.model;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 public class Role {

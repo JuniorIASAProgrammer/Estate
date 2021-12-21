@@ -44,10 +44,10 @@ public class UserController {
         }
     }
 
-    @PatchMapping("/update/id={id}")
-    public ResponseEntity<Void> update(@PathVariable long id, @RequestBody UserDto user) {
+    @PatchMapping("/update")
+    public ResponseEntity<Void> update(@RequestBody UserDto user) {
         try{
-            userService.update(id, user);
+            userService.update(user);
             return ResponseEntity.noContent().build();
         }
         catch (IllegalArgumentException e){
@@ -67,9 +67,9 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/delete/userId={id}")
-    public ResponseEntity<Void> delete(@PathVariable long id){
-        userService.delete(id);
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> delete(){
+        userService.delete();
         return ResponseEntity.noContent().build();
     }
 }

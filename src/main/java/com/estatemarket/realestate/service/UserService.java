@@ -7,6 +7,7 @@ import com.estatemarket.realestate.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,20 +33,21 @@ public final class UserService {
     }
 
     public User getByEmail(String email) {
-        final Optional<User> maybeUser = userRepo.findOneByEmail(email);
-        if (maybeUser.isEmpty()) throw new IllegalArgumentException("User not found");
-        else return maybeUser.get();
+        User maybeUser = userRepo.findByEmail(email);
+        if (maybeUser == null) throw new IllegalArgumentException("User not found");
+        else return maybeUser;
     }
 
-    public void update(long id, UserDto userDto) throws IllegalArgumentException {
+    public void update(UserDto userDto) throws IllegalArgumentException {
         String name = userDto.getName();
         String surname = userDto.getSurname();
         String email = userDto.getEmail();
         String password = userDto.getPassword();
         String phone = userDto.getPhone();
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        long id = userRepo.findByEmail(currentUserEmail).getId();
         final Optional<User> maybeUser = userRepo.findById(id);
         if (maybeUser.isEmpty()) throw new IllegalArgumentException("User not found");
-
         User user = maybeUser.get();
         if (name != null && !name.isBlank()) user.setName(name);
         if (surname != null && !surname.isBlank()) user.setSurname(surname);
@@ -76,7 +78,9 @@ public final class UserService {
         userRepo.save(user);
     }
 
-    public void delete(long id){
+    public void delete(){
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        long id = userRepo.findByEmail(currentUserEmail).getId();
         userRepo.deleteById(id);
     }
 }

@@ -9,18 +9,26 @@ public class Offer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
-    private int id;
+    private long id;
 
-    @Column(name = "estate_id")
-    private int estateId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Estate estate;
 
-    @Column(name = "realtor_id")
-    private int realtorId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User realtor;
 
     @Column(name = "date")
     private Timestamp datetime;
 
-    public int getId() {
+    public Offer() {
+    }
+
+    public Offer(Estate estate, User realtor) {
+        this.estate = estate;
+        this.realtor = realtor;
+    }
+
+    public long getId() {
         return id;
     }
 
@@ -28,20 +36,20 @@ public class Offer {
         this.id = id;
     }
 
-    public int getEstateId() {
-        return estateId;
+    public Estate getEstate() {
+        return estate;
     }
 
-    public void setEstateId(int estateId) {
-        this.estateId = estateId;
+    public void setEstate(Estate estate) {
+        this.estate = estate;
     }
 
-    public int getRealtorId() {
-        return realtorId;
+    public User getRealtor() {
+        return realtor;
     }
 
-    public void setRealtorId(int realtorId) {
-        this.realtorId = realtorId;
+    public void setRealtor(User realtor) {
+        this.realtor = realtor;
     }
 
     public Timestamp getDatetime() {
@@ -52,16 +60,4 @@ public class Offer {
         this.datetime = datetime;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Offer offer = (Offer) o;
-        return id == offer.id && estateId == offer.estateId && realtorId == offer.realtorId && Objects.equals(datetime, offer.datetime);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, estateId, realtorId, datetime);
-    }
 }

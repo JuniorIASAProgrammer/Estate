@@ -1,29 +1,20 @@
 package com.estatemarket.realestate.repo.model;
 
-import javax.persistence.*;
 
-@Entity
-@Table(name = "description")
+
 public class Description {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
     private String city;
     private String district;
-    private String adress;
+    private String address;
 
     public Description() {
     }
 
-    public Description(String city, String district, String adress) {
+    public Description(String city, String district, String address) {
         this.city = city;
         this.district = district;
-        this.adress = adress;
-    }
-
-    public long getId() {
-        return id;
+        this.address = address;
     }
 
     public String getCity() {
@@ -43,14 +34,14 @@ public class Description {
     }
 
     public String getAdress() {
-        return adress;
+        return address;
     }
 
-    public void setAdress(String adress) {
-        this.adress = adress;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public boolean isEmpty() {
-        return !(this.city != null || this.district != null || this.adress != null);
+        return !(this.city != null || this.district != null || this.address != null);
     }
 }

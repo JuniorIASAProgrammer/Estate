@@ -8,10 +8,10 @@ import com.estatemarket.realestate.repo.model.Description;
 import com.estatemarket.realestate.repo.model.Estate;
 import com.estatemarket.realestate.repo.model.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -25,33 +25,45 @@ public final class EstateService {
     }
 
     public Estate fetchById(long id) throws IllegalArgumentException{
-        final Optional<Estate> maybeEstate = estateRepo.findById(id);
-        if (maybeEstate.isEmpty()) throw new IllegalArgumentException("Estate not found");
-        else return maybeEstate.get();
+        return estateRepo.findById(id).orElseThrow(()-> new IllegalArgumentException("User not found"));
+    }
+
+    public List<Estate> fetchByAuthorisedUser() {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User owner = userRepo.findByEmail(currentUserEmail);
+        return estateRepo.findAllByOwner(owner);
     }
 
     public long create(EstateDto estate){
         EstateDealEnum dealType = estate.getDealType();
         Description description = estate.getDescription();
-        long ownerId = estate.getOwner();
-        User owner = userRepo.findOwnerById(ownerId);
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User owner = userRepo.findByEmail(currentUserEmail);
         Estate newEstate = new Estate(dealType, description, owner);
-        final Estate savedEstate = estateRepo.save(newEstate);
+        Estate savedEstate = estateRepo.save(newEstate);
         return savedEstate.getId();
     }
 
     public void update(long id, EstateDto estateDto){
         EstateDealEnum dealType = estateDto.getDealType();
-        Description description = estateDto.getDescription();
-        final Optional<Estate> maybeEstate = estateRepo.findById(id);
-        if (maybeEstate.isEmpty()) throw new IllegalArgumentException("Estate not found");
-        Estate estate = maybeEstate.get();
-        if (!dealType.toString().isEmpty() && dealType!=estate.getDealtype()) estate.setDescription(description);
-        if (!description.isEmpty()) estate.setDescription(description);
-        estateRepo.save(estate);
+        String city = estateDto.getDescription().getCity();
+        String district = estateDto.getDescription().getDistrict();
+        String adress = estateDto.getDescription().getAdress();
+        final Estate maybeEstate = estateRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Estate not found"));
+        if (dealType!=null && !dealType.toString().isEmpty() && dealType!=maybeEstate.getDealtype()) maybeEstate.setDealType(dealType);
+        if (city!=null && !city.isEmpty()) maybeEstate.setCity(city);
+        if (district!=null && !district.isEmpty()) maybeEstate.setDistrict(district);
+        if (adress!=null && !adress.isEmpty()) maybeEstate.setAddress(adress);
+        estateRepo.save(maybeEstate);
     }
 
     public void delete(long id){
-        estateRepo.deleteById(id);
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User owner = userRepo.findByEmail(currentUserEmail);
+        final Estate maybeEstate = estateRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Estate not found"));
+        if (maybeEstate.getOwner() == owner){
+            estateRepo.deleteById(id);
+        }
+        else throw new IllegalArgumentException("Access denied");
     }
 }

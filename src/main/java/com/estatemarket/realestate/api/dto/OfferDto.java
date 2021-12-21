@@ -9,6 +9,5 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class OfferDto {
     private long estateId;
-    private long realtorId;
     private Timestamp datetime;
 }

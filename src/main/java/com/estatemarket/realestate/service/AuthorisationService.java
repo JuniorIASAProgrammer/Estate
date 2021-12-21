@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -28,26 +27,13 @@ public class AuthorisationService implements UserDetailsService {
     private final RoleRepo roleRepo;
     private final PasswordEncoder passwordEncoder;
 
-//    public long login(UserDto someUser) {
-//        String email = someUser.getEmail();
-//        String password = someUser.getPassword();
-//        final Optional<User> maybeUser = userRepo.findOneByEmail(email);
-//        if (maybeUser.isEmpty()) throw new IllegalArgumentException("User not found");
-//        else {
-//            if (Objects.equals(maybeUser.get().getPassword(), password)) {
-//                log.info("Successfully login");
-//                return maybeUser.get().getId();
-//            }
-//            else throw new IllegalArgumentException("Incorrect password");
-//        }
-//    }
 
     public long singup(UserDto newUser) {
         String name = newUser.getName();
         String surname = newUser.getSurname();
         String email = newUser.getEmail();
         String password = newUser.getPassword();
-        String repeatPassword = newUser.getPassword();
+        String repeatPassword = newUser.getRepeatPassword();
         String phone = newUser.getPhone();
         Role role = roleRepo.findByName(newUser.getRole());
         if (Objects.equals(password, repeatPassword)) {
@@ -63,7 +49,7 @@ public class AuthorisationService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepo.findOneByEmail(username).orElseThrow(()-> new UsernameNotFoundException("User with login not found"));
+        User user = userRepo.findByEmail(username);
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.getRole().getName()));
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);

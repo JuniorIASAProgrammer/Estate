@@ -1,8 +1,6 @@
 package com.estatemarket.realestate.api;
 
 import com.estatemarket.realestate.api.dto.EstateDto;
-import com.estatemarket.realestate.api.enums.EstateDealEnum;
-import com.estatemarket.realestate.repo.model.Description;
 import com.estatemarket.realestate.repo.model.Estate;
 import com.estatemarket.realestate.service.EstateService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +21,12 @@ public class EstateController {
     @GetMapping("/getAll")
     public ResponseEntity<List<Estate>> getAll() {
         final List<Estate> estateList = estateService.fetchAll();
+        return ResponseEntity.ok(estateList);
+    }
+
+    @GetMapping("/getMyEstate")
+    public ResponseEntity<List<Estate>> getByAuthorisedUser() {
+        final List<Estate> estateList = estateService.fetchByAuthorisedUser();
         return ResponseEntity.ok(estateList);
     }
 

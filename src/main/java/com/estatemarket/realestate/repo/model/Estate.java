@@ -13,11 +13,10 @@ public class Estate {
     private long id;
 
     @Enumerated(EnumType.STRING)
-
     @Column(name = "dealtype")
     private EstateDealEnum dealType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private User owner;
 
     @Column(name = "city")
@@ -26,8 +25,9 @@ public class Estate {
     @Column(name = "district")
     private String district;
 
-    @Column(name = "adress")
-    private String adress;
+    @Column(name = "address")
+    private String address;
+
 
     public Estate() {
     }
@@ -37,7 +37,7 @@ public class Estate {
         this.owner = owner;
         this.city = description.getCity();
         this.district = description.getDistrict();
-        this.adress = description.getAdress();
+        this.address = description.getAdress();
     }
 
     public long getId() {
@@ -72,20 +72,13 @@ public class Estate {
         this.district = district;
     }
 
-    public String getAdress() {
-        return adress;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAdress(String adress) {
-        this.adress = adress;
+    public void setAddress(String adress) {
+        this.address = adress;
     }
-
-    public void setDescription(Description description) {
-        this.city = description.getCity();
-        this.district = description.getDistrict();
-        this.adress = description.getAdress();
-    }
-
 }
 
 
