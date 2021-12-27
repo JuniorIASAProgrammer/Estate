@@ -4,6 +4,7 @@ import com.estatemarket.realestate.api.dto.EstateDto;
 import com.estatemarket.realestate.repo.model.Estate;
 import com.estatemarket.realestate.service.EstateService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,11 +34,11 @@ public class EstateController {
     @GetMapping("/getById/id={id}")
     public ResponseEntity<Estate> getById(@PathVariable long id){
         try {
-            Estate estate = estateService.fetchById(id);
+            final Estate estate = estateService.fetchById(id);
             return ResponseEntity.ok(estate);
         }
         catch (IllegalArgumentException e){
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -49,19 +50,19 @@ public class EstateController {
     }
 
     @PatchMapping("/update/id={id}")
-    public ResponseEntity<Void> update(@PathVariable long id, @RequestBody EstateDto estate){
+    public ResponseEntity<String> update(@PathVariable long id, @RequestBody EstateDto estate){
         try{
             estateService.update(id, estate);
-            return ResponseEntity.noContent().build();
+            return new ResponseEntity<>("Information updated", HttpStatus.ACCEPTED);
         }
         catch (IllegalArgumentException e){
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
         }
     }
 
     @DeleteMapping("/delete/id={id}")
-    public ResponseEntity<Void> delete(@PathVariable long id){
+    public ResponseEntity<String> delete(@PathVariable long id){
         estateService.delete(id);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>("Profile deleted", HttpStatus.OK);
     }
 }

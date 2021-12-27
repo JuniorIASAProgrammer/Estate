@@ -34,11 +34,14 @@ public class User {
     @ManyToOne(fetch = FetchType.EAGER)
     private Role role;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Status status;
+
 
     public User() {
     }
 
-    public User(String name, String surname, String email, String password, String phone, Role role) {
+    public User(String name, String surname, String email, String password, String phone, Role role, Status status) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -46,6 +49,7 @@ public class User {
         this.phone = phone;
         this.ban = BanEnum.NO;
         this.role = role;
+        this.status = status;
     }
 
     public long getId() {
@@ -110,6 +114,26 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", phone='" + phone + '\'' +
+                ", role=" + role +
+                '}';
     }
 }
 

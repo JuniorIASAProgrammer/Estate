@@ -2,7 +2,6 @@ package com.estatemarket.realestate.repo.model;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Objects;
 
 @Entity
 public class Offer {

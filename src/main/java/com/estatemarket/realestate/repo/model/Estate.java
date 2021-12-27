@@ -1,6 +1,7 @@
 package com.estatemarket.realestate.repo.model;
 
 import com.estatemarket.realestate.api.enums.EstateDealEnum;
+
 import javax.persistence.*;
 
 @Entity

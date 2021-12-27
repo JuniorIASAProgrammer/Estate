@@ -4,6 +4,7 @@ import com.estatemarket.realestate.repo.model.User;
 import com.estatemarket.realestate.api.dto.UserDto;
 import com.estatemarket.realestate.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ public class UserController {
             return ResponseEntity.ok(user);
         }
         catch (IllegalArgumentException e){
-            return ResponseEntity.noContent().build();
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -40,36 +41,44 @@ public class UserController {
             return ResponseEntity.ok(user);
         }
         catch (IllegalArgumentException e){
-            return ResponseEntity.noContent().build();
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @PatchMapping("/update")
-    public ResponseEntity<Void> update(@RequestBody UserDto user) {
+    public ResponseEntity<String> update(@RequestBody UserDto user) {
         try{
             userService.update(user);
-            return ResponseEntity.noContent().build();
+            return new ResponseEntity<>("User info updated", HttpStatus.OK);
         }
         catch (IllegalArgumentException e){
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PatchMapping("/block/userId={id}")
-    public ResponseEntity<Void> block(@PathVariable long id) {
-        userService.blockById(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> block(@PathVariable long id) {
+        try {
+            userService.blockById(id);
+            return new ResponseEntity<>("User blocked", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+        }
     }
 
     @PatchMapping("/unblock/userId={id}")
-    public ResponseEntity<Void> unblock(@PathVariable long id) {
-        userService.unblockById(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> unblock(@PathVariable long id) {
+        try {
+            userService.unblockById(id);
+            return new ResponseEntity<>("User unblocked", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> delete(){
+    public ResponseEntity<String> delete(){
         userService.delete();
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>("User successfully deleted", HttpStatus.OK);
     }
 }

@@ -4,6 +4,7 @@ import com.estatemarket.realestate.repo.model.Deal;
 import com.estatemarket.realestate.repo.model.Offer;
 import com.estatemarket.realestate.service.DealService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,23 +49,22 @@ public class DealController {
 
 //    Cancel offer - for realtor
     @DeleteMapping("/deleteOffer/estateId={estateId}")
-    public ResponseEntity<Void> deleteOffer(@RequestBody long estateId) {
+    public ResponseEntity<String> deleteOffer(@RequestBody long estateId) {
         dealService.deleteOffer(estateId);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>("Offer cancelled", HttpStatus.OK);
     }
-
 
 //    Cancel the deal\
     @PatchMapping("/cancelDeal/dealId={dealId}")
-    public ResponseEntity<Void> cancelDeal(@PathVariable long dealId) {
+    public ResponseEntity<String> cancelDeal(@PathVariable long dealId) {
         dealService.cancelDeal(dealId);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>("Deal cancelled", HttpStatus.OK);
     }
 
 //    Close the deal - for realtor
     @PatchMapping("/closeDeal/dealId={dealId}")
-    public ResponseEntity<Void> closeDeal(@PathVariable long dealId) {
+    public ResponseEntity<String> closeDeal(@PathVariable long dealId) {
         dealService.closeDeal(dealId);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>("Deal completed", HttpStatus.OK);
     }
 }

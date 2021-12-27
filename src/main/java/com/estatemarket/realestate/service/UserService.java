@@ -27,15 +27,15 @@ public final class UserService {
     }
 
     public User getById(long id) throws IllegalArgumentException{
-        final Optional<User> maybeUser = userRepo.findById(id);
+        final Optional<User> maybeUser = userRepo.findOneById(id);
         if (maybeUser.isEmpty()) throw new IllegalArgumentException("User not found");
         else return maybeUser.get();
     }
 
-    public User getByEmail(String email) {
-        User maybeUser = userRepo.findByEmail(email);
-        if (maybeUser == null) throw new IllegalArgumentException("User not found");
-        else return maybeUser;
+    public User getByEmail(String email) throws IllegalArgumentException{
+        final Optional<User> maybeUser = userRepo.findOneByEmail(email);
+        if (maybeUser.isEmpty()) throw new IllegalArgumentException("User not found");
+        else return maybeUser.get();
     }
 
     public void update(UserDto userDto) throws IllegalArgumentException {
@@ -58,7 +58,7 @@ public final class UserService {
             userRepo.save(user);
         }
         catch (Exception e){
-            throw new IllegalArgumentException("Email already exists");
+            throw new IllegalArgumentException("Email already used");
         }
     }
 
